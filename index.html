@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debate Timer</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #2ecc71;
+            --text-color: #333;
+            --background-color: #f9f7f5;
+            --timer-bg-color: #f0f0f0;
+            --timer-text-color: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .main-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 2vh;
+            gap: 2vh;
+        }
+
+        .logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            gap: 8vw;
+            margin-top: 2vh;
+        }
+
+        .logos #cap {
+            font-size: 50px;
+        }
+
+        .logostudent {
+            font-size: 50px;
+            font-weight: 800;
+            color: #4361ee;
+            ;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        .logostudent span {
+            color: #f72585;
+        }
+
+        .logo {
+            height: 250px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .logo.uwed {
+            background-image: url('./uwed.png');
+        }
+
+        .logo.students {
+            background-image: url('./students.png');
+        }
+
+        .topic-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 1.5vh;
+            font-size: 18px;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            text-align: center;
+            background-color: var(--timer-bg-color);
+            color: var(--timer-text-color);
+        }
+
+        .timer-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 2vh;
+        }
+
+        .topic-display {
+            font-size: 36px;
+            text-align: center;
+            color: var(--timer-text-color);
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .timer {
+            width: min(500px, 45vh);
+            height: min(500px, 45vh);
+            background-color: var(--timer-bg-color);
+            border: 8px solid var(--success-color);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: min(140px, 13vh);
+            color: var(--timer-text-color);
+            margin: 2vh 0;
+            transition: border-color 0.3s ease;
+        }
+
+        .timer.warning {
+            border-color: var(--accent-color);
+        }
+
+        .timer.protected {
+            border-color: var(--accent-color);
+        }
+
+        .timer.success {
+            border-color: var(--success-color);
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 2vh;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .control-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .control-row.modes {
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+        }
+
+        .btn.mode {
+            width: auto;
+            padding: 0 20px;
+            border-radius: 30px;
+            font-size: 18px;
+        }
+
+        .settings-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        #advancedSettingsModal {
+            z-index: 1001;
+        }
+
+        .settings-content {
+            background-color: var(--timer-bg-color);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            color: var(--timer-text-color);
+        }
+
+        .settings-group {
+            margin-bottom: 20px;
+        }
+
+        .settings-group h3 {
+            margin-bottom: 10px;
+            color: var(--timer-text-color);
+        }
+
+        .settings-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            background-color: var(--background-color);
+            color: var(--timer-text-color);
+        }
+
+        .settings-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        @media (max-height: 900px) {
+            .logo {
+                height: 100px;
+            }
+
+            .topic-display {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-height: 700px) {
+            .logo {
+                height: 150px;
+            }
+
+            .topic-display {
+                font-size: 28px;
+            }
+
+            .timer {
+                width: min(400px, 40vh);
+                height: min(400px, 40vh);
+                font-size: min(120px, 11vh);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                height: 120px;
+            }
+
+            .timer {
+                width: min(350px, 35vh);
+                height: min(350px, 35vh);
+                font-size: min(100px, 10vh);
+            }
+
+            .topic-display {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                height: 100px;
+            }
+
+            .logos {
+                gap: 4vw;
+            }
+
+            .timer {
+                width: min(300px, 30vh);
+                height: min(300px, 30vh);
+                font-size: min(80px, 8vh);
+            }
+
+            .topic-display {
+                font-size: 20px;
+            }
+
+            .btn {
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .btn.mode {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="logos">
+            <!--            <a href="https://t.me/uweddc_official" target="_blank">
+                <div class="logo uwed"></div> -->
+            </a>
+            <a href="https://students.uz" target="_blank" class="logo logostudent"><span
+                    id="cap">🎓</span>Students<span>.uz</span></a>
+        </div>
+
+        <input type="text" class="topic-input" placeholder="Введите тему дебатов" id="topicInput">
+
+        <div class="timer-container" id="timerContainer">
+            <div class="topic-display" id="topicDisplay"></div>
+            <div class="timer" id="timer">00:00</div>
+            <div class="controls">
+                <div class="control-row">
+                    <button class="btn" id="startPauseBtn">▶</button>
+                    <button class="btn" id="resetBtn">↺</button>
+                    <button class="btn" id="questionBtn">?</button>
+                    <button class="btn" id="settingsBtn">⚙</button>
+                </div>
+                <div class="control-row modes">
+                    <button class="btn mode" id="speechBtn">Речь</button>
+                    <button class="btn mode" id="conclusionBtn">Заключение</button>
+                    <button class="btn mode" id="prepBtn">Подготовка</button>
+                    <button class="btn mode" id="customBtn">Своё время</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-content">
+            <div class="settings-group">
+                <h3>Тема дебатов</h3>
+                <input type="text" class="settings-input" id="settingsTopicInput">
+            </div>
+            <div class="settings-group">
+                <h3>Кастомное время (минуты)</h3>
+                <input type="number" class="settings-input" id="customTimeInput" min="1" max="60">
+            </div>
+            <div class="settings-group">
+                <label style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="soundEnabledCheckbox" checked>
+                    Включить звуки
+                </label>
+            </div>
+            <button class="settings-btn" id="advancedSettingsBtn">Расширенные настройки</button>
+            <button class="settings-btn" id="saveSettingsBtn">Сохранить</button>
+            <button class="settings-btn" id="backBtn">Назад</button>
+        </div>
+    </div>
+
+    <div class="settings-modal" id="advancedSettingsModal">
+        <div class="settings-content">
+            <div class="settings-group">
+                <h3>Время речи (минуты)</h3>
+                <input type="number" class="settings-input" id="speechTimeInput" min="1" max="60">
+            </div>
+            <div class="settings-group">
+                <h3>Время заключения (минуты)</h3>
+                <input type="number" class="settings-input" id="conclusionTimeInput" min="1" max="60">
+            </div>
+            <div class="settings-group">
+                <h3>Время подготовки (минуты)</h3>
+                <input type="number" class="settings-input" id="prepTimeInput" min="1" max="60">
+            </div>
+            <div class="settings-group">
+                <h3>Время без гаджетов в подготовке (минуты)</h3>
+                <input type="number" class="settings-input" id="noGadgetTimeInput" min="1" max="60">
+            </div>
+            <div class="settings-group">
+                <h3>Защитное время (секунды)</h3>
+                <input type="number" class="settings-input" id="protectedTimeInput" min="0" max="60">
+                <label>
+                    <input type="checkbox" id="protectedTimeCheckbox" checked>
+                    Использовать защитное время
+                </label>
+            </div>
+            <div class="settings-group">
+                <h3>Время вопроса (секунды)</h3>
+                <input type="number" class="settings-input" id="questionTimeInput" min="1" max="30">
+            </div>
+            <button class="settings-btn" id="saveAdvancedSettingsBtn">Сохранить</button>
+            <button class="settings-btn" id="backAdvancedBtn">Назад</button>
+        </div>
+    </div>
+
+    <script>
+        // Sound file paths
+        const SOUND_PATHS = {
+            START: 'sounds/gong.wav',
+            STOP_POINT: 'sounds/gong.wav',
+            END_SHORT: 'sounds/short.wav',
+            END: 'sounds/gong.wav'
+        };
+
+        // Audio elements
+        const startSignal = new Audio(SOUND_PATHS.START);
+        const stopPoint = new Audio(SOUND_PATHS.STOP_POINT);
+        const endShortSignal = new Audio(SOUND_PATHS.END_SHORT);
+        const endSignal = new Audio(SOUND_PATHS.END);
+
+        // DOM elements
+        const topicInput = document.getElementById('topicInput');
+        const timerContainer = document.getElementById('timerContainer');
+        const topicDisplay = document.getElementById('topicDisplay');
+        const timer = document.getElementById('timer');
+        const startPauseBtn = document.getElementById('startPauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const questionBtn = document.getElementById('questionBtn');
+        const speechBtn = document.getElementById('speechBtn');
+        const conclusionBtn = document.getElementById('conclusionBtn');
+        const prepBtn = document.getElementById('prepBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const settingsTopicInput = document.getElementById('settingsTopicInput');
+        const customTimeInput = document.getElementById('customTimeInput');
+        const protectedTimeInput = document.getElementById('protectedTimeInput');
+        const protectedTimeCheckbox = document.getElementById('protectedTimeCheckbox');
+        const questionTimeInput = document.getElementById('questionTimeInput');
+        const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+        const backBtn = document.getElementById('backBtn');
+        const customBtn = document.getElementById('customBtn');
+        const advancedSettingsBtn = document.getElementById('advancedSettingsBtn');
+        const advancedSettingsModal = document.getElementById('advancedSettingsModal');
+        const speechTimeInput = document.getElementById('speechTimeInput');
+        const conclusionTimeInput = document.getElementById('conclusionTimeInput');
+        const prepTimeInput = document.getElementById('prepTimeInput');
+        const noGadgetTimeInput = document.getElementById('noGadgetTimeInput');
+        const saveAdvancedSettingsBtn = document.getElementById('saveAdvancedSettingsBtn');
+        const backAdvancedBtn = document.getElementById('backAdvancedBtn');
+        const soundEnabledCheckbox = document.getElementById('soundEnabledCheckbox');
+
+        // State variables
+        let currentTime = 0;
+        let totalTime = 0;
+        let isRunning = false;
+        let isQuestionMode = false;
+        let timerInterval;
+        let questionInterval;
+        let currentMode = 'speech';
+        let hasStarted = false;
+        let settings = {
+            customTime: 4,
+            protectedTime: 30,
+            useProtectedTime: true,
+            questionTime: 10,
+            speechTime: 4,
+            conclusionTime: 2,
+            prepTime: 10,
+            noGadgetTime: 3,
+            soundEnabled: true
+        };
+
+        // Initialize from localStorage
+        const savedTopic = localStorage.getItem('debateTopic');
+        if (savedTopic) {
+            topicInput.value = savedTopic;
+            topicDisplay.textContent = savedTopic;
+            timerContainer.style.display = 'flex';
+            topicInput.style.display = 'none';
+        }
+
+        const savedSettings = localStorage.getItem('timerSettings');
+        if (savedSettings) {
+            settings = { ...settings, ...JSON.parse(savedSettings) };
+            updateSettingsInputs();
+        }
+
+        // Event listeners
+        topicInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && topicInput.value.trim()) {
+                const topic = topicInput.value.trim();
+                localStorage.setItem('debateTopic', topic);
+                topicDisplay.textContent = topic;
+                timerContainer.style.display = 'flex';
+                topicInput.style.display = 'none';
+            }
+        });
+
+        startPauseBtn.addEventListener('click', toggleTimer);
+        resetBtn.addEventListener('click', resetTimer);
+        questionBtn.addEventListener('click', startQuestion);
+        speechBtn.addEventListener('click', () => setMode('speech'));
+        conclusionBtn.addEventListener('click', () => setMode('conclusion'));
+        prepBtn.addEventListener('click', () => setMode('prep'));
+        customBtn.addEventListener('click', () => setMode('custom'));
+        settingsBtn.addEventListener('click', () => settingsModal.style.display = 'flex');
+        saveSettingsBtn.addEventListener('click', saveSettings);
+        backBtn.addEventListener('click', () => settingsModal.style.display = 'none');
+        advancedSettingsBtn.addEventListener('click', () => {
+            settingsModal.style.display = 'none';
+            advancedSettingsModal.style.display = 'flex';
+        });
+        backAdvancedBtn.addEventListener('click', () => {
+            advancedSettingsModal.style.display = 'none';
+            settingsModal.style.display = 'flex';
+        });
+        saveAdvancedSettingsBtn.addEventListener('click', saveAdvancedSettings);
+
+        // Functions
+        function toggleTimer() {
+            if (isQuestionMode) {
+                // If in question mode, skip to the end of question immediately
+                clearInterval(questionInterval);
+                isQuestionMode = false;
+                timer.classList.remove('success');
+
+                // Restore main timer state without playing sound
+                currentTime = currentTime + 3;
+                updateDisplay();
+                return;
+            }
+
+            if (isRunning) {
+                pauseTimer();
+                startPauseBtn.textContent = '▶';
+            } else {
+                startTimer();
+                startPauseBtn.textContent = '⏸';
+            }
+        }
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                if (!hasStarted) {
+                    playSound(startSignal);
+                    hasStarted = true;
+                }
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            if (isRunning) {
+                isRunning = false;
+                clearInterval(timerInterval);
+            }
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            currentTime = totalTime;
+            updateDisplay();
+            startPauseBtn.textContent = '▶';
+            hasStarted = false;
+        }
+
+        function updateTimer() {
+            if (currentTime > 0) {
+                currentTime--;
+                updateDisplay();
+
+                if (currentTime <= 10 && !isQuestionMode) {
+                    timer.classList.add('warning');
+                    playSound(endShortSignal);
+                }
+
+                if (currentTime === 0) {
+                    endTimer();
+                }
+            }
+        }
+
+        function updateDisplay() {
+            if (isQuestionMode) {
+                return; // Don't update display during question mode
+            }
+
+            const minutes = Math.floor(currentTime / 60);
+            const seconds = currentTime % 60;
+            timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            // Remove all classes first
+            timer.classList.remove('protected', 'warning', 'success');
+
+            if (currentMode === 'speech' && settings.useProtectedTime) {
+                if (currentTime <= settings.protectedTime ||
+                    currentTime >= totalTime - settings.protectedTime) {
+                    timer.classList.add('protected');
+                }
+            } else if (currentMode === 'prep') {
+                if (currentTime <= settings.noGadgetTime * 60) {
+                    timer.classList.add('warning');
+                }
+            }
+
+            // Update button styles
+            speechBtn.classList.remove('active');
+            conclusionBtn.classList.remove('active');
+            prepBtn.classList.remove('active');
+            customBtn.classList.remove('active');
+
+            switch (currentMode) {
+                case 'speech':
+                    speechBtn.classList.add('active');
+                    break;
+                case 'conclusion':
+                    conclusionBtn.classList.add('active');
+                    break;
+                case 'prep':
+                    prepBtn.classList.add('active');
+                    break;
+                case 'custom':
+                    customBtn.classList.add('active');
+                    break;
+            }
+        }
+
+        function endTimer() {
+            pauseTimer();
+            timer.classList.add('warning');
+            playSound(endSignal);
+        }
+
+        function startQuestion() {
+            if (isQuestionMode) return;
+
+            isQuestionMode = true;
+            const questionTime = settings.questionTime;
+            const mainTime = currentTime;
+
+            // Start question countdown immediately
+            let questionCountdown = questionTime;
+            timer.classList.remove('warning', 'protected');
+            timer.classList.add('success');
+
+            function updateQuestionDisplay() {
+                timer.textContent = `00:${questionCountdown.toString().padStart(2, '0')}`;
+            }
+
+            updateQuestionDisplay();
+
+            questionInterval = setInterval(() => {
+                if (questionCountdown > 0) {
+                    questionCountdown--;
+                    updateQuestionDisplay();
+                } else {
+                    clearInterval(questionInterval);
+                    isQuestionMode = false;
+                    timer.classList.remove('success');
+                    playSound(stopPoint);
+
+                    // Add 3 seconds to the main timer
+                    currentTime = mainTime + 3;
+                    updateDisplay();
+                }
+            }, 1000);
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            switch (mode) {
+                case 'speech':
+                    totalTime = settings.speechTime * 60;
+                    break;
+                case 'conclusion':
+                    totalTime = settings.conclusionTime * 60;
+                    break;
+                case 'prep':
+                    totalTime = settings.prepTime * 60;
+                    break;
+                case 'custom':
+                    totalTime = settings.customTime * 60;
+                    break;
+            }
+            currentTime = totalTime;
+            hasStarted = false;
+            updateDisplay();
+        }
+
+        function updateSettingsInputs() {
+            settingsTopicInput.value = topicDisplay.textContent;
+            customTimeInput.value = settings.customTime;
+            speechTimeInput.value = settings.speechTime;
+            conclusionTimeInput.value = settings.conclusionTime;
+            prepTimeInput.value = settings.prepTime;
+            noGadgetTimeInput.value = settings.noGadgetTime;
+            protectedTimeInput.value = settings.protectedTime;
+            protectedTimeCheckbox.checked = settings.useProtectedTime;
+            questionTimeInput.value = settings.questionTime;
+            soundEnabledCheckbox.checked = settings.soundEnabled;
+        }
+
+        function saveSettings() {
+            settings.customTime = parseInt(customTimeInput.value) || 5;
+            settings.soundEnabled = soundEnabledCheckbox.checked;
+
+            const newTopic = settingsTopicInput.value.trim();
+            if (newTopic) {
+                localStorage.setItem('debateTopic', newTopic);
+                topicDisplay.textContent = newTopic;
+            }
+
+            localStorage.setItem('timerSettings', JSON.stringify(settings));
+            settingsModal.style.display = 'none';
+
+            // Update timer if we're in custom mode
+            if (currentMode === 'custom') {
+                setMode('custom');
+            }
+        }
+
+        function saveAdvancedSettings() {
+            settings.speechTime = parseInt(speechTimeInput.value) || 4;
+            settings.conclusionTime = parseInt(conclusionTimeInput.value) || 2;
+            settings.prepTime = parseInt(prepTimeInput.value) || 10;
+            settings.noGadgetTime = parseInt(noGadgetTimeInput.value) || 3;
+            settings.protectedTime = parseInt(protectedTimeInput.value) || 30;
+            settings.useProtectedTime = protectedTimeCheckbox.checked;
+            settings.questionTime = parseInt(questionTimeInput.value) || 10;
+
+            localStorage.setItem('timerSettings', JSON.stringify(settings));
+            advancedSettingsModal.style.display = 'none';
+            settingsModal.style.display = 'flex';
+
+            // Update timer if we're in a relevant mode
+            if (currentMode !== 'custom') {
+                setMode(currentMode);
+            }
+        }
+
+        // Function to play sound if enabled
+        function playSound(sound) {
+            if (settings.soundEnabled) {
+                sound.play();
+            }
+        }
+
+        // Add styles for active button state
+        const style = document.createElement('style');
+        style.textContent = `
+            .btn.mode.active {
+                background-color: var(--success-color);
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initial setup
+        setMode('speech');
+    </script>
+</body>
+
+</html>
