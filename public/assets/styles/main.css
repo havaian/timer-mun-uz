@@ -1,0 +1,127 @@
+/* Custom animations and styles that extend Tailwind */
+.btn.mode.active {
+    background-color: var(--success-color);
+}
+
+.timer {
+    cursor: pointer !important;
+    font-size: 14rem !important;
+    font-weight: bold !important;
+    margin: 1rem 0 !important;
+}
+
+#topicDisplay {
+    background: none !important;
+    cursor: pointer !important;
+    padding: 8px !important;
+    text-align: center !important;
+    border-radius: 4px !important;
+    transition: background-color 0.2s !important;
+    margin-bottom: 0 !important;
+}
+
+#topicDisplay:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.main-container {
+    gap: 0.5rem !important;
+}
+
+.timer-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+}
+
+.logos {
+    margin-bottom: 0.5rem !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield !important;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1) !important;
+    }
+
+    100% {
+        transform: scale(1.05) !important;
+    }
+}
+
+.timer-pulse {
+    animation: pulse 1s infinite alternate !important;
+}
+
+.timer-cursor {
+    cursor: pointer !important;
+}
+
+.btn-mode.active {
+    background-color: #2ecc71 !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Timer state classes */
+.timer.warning {
+    color: #e74c3c !important;
+}
+
+.timer.protected {
+    color: #000 !important;
+}
+
+.timer.success {
+    color: #2ecc71 !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield !important;
+}
+
+@media (max-width: 480px) {
+    .logos .logo img {
+        height: 80px !important;
+        width: auto;
+    }
+
+    .timer {
+        font-size: 3rem !important;
+    }
+
+    .topic-display {
+        font-size: 2rem !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .logos .logo img {
+        height: 60px !important;
+        width: auto;
+    }
+
+    .timer {
+        font-size: 2.5rem !important;
+    }
+
+    .topic-display {
+        font-size: 1.75rem !important;
+    }
+}

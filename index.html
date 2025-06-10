@@ -5,109 +5,167 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timer for MUN</title>
-    <link rel="icon" href="./assets/timer-favicon.png" type="image/png">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./public/assets/images/timer-favicon.png" type="image/png">
+    <script src="./public/assets/scripts/tailwind.js"></script>
+    <link rel="stylesheet" href="./public/assets/styles/main.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3182ce',
+                        secondary: '#4299e1',
+                        accent: '#e74c3c',
+                        success: '#2ecc71',
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
-<body>
-    <div class="main-container">
-        <div class="logos">
+<body class="min-h-screen flex flex-col items-center justify-start pt-8 pb-16 px-4 bg-gray-100 text-gray-800 font-sans overflow-x-hidden">
+    <div class="w-full flex flex-col items-center justify-start">
+        <!-- Logos Section -->
+        <div class="flex justify-center items-center mb-4 space-x-4">
             <div class="logo timer">
-                <img src='./assets/timer.webp'></img>
+                <img src='./public/assets/images/timer.webp' alt="Timer Logo" class="h-32 w-auto lg:h-40">
             </div>
-             <div class="logo scocenter">
-                <img src='./assets/scocenter.webp'></img>
+            <div class="logo scocenter">
+                <img src='./public/assets/images/scocenter.webp' alt="SCO Center Logo" class="h-48 w-auto lg:h-56">
             </div>
             <div class="logo scolar">
-                <img src='./assets/scolar.webp'></img>
+                <img src='./public/assets/images/scolar.webp' alt="Scolar Logo" class="h-48 w-auto lg:h-56">
             </div>
-             <div class="logo uvalogo">
-                <img src='./assets/uvalogo.webp'></img>
+            <div class="logo uvalogo">
+                <img src='./public/assets/images/uvalogo.webp' alt="UVA Logo" class="h-24 w-auto lg:h-32">
             </div>
         </div>
 
-        <div class="timer-container" id="timerContainer">
-            <div class="topic-display" id="topicDisplay"></div>
-            <div class="timer" id="timer">00:00</div>
-            <div class="controls">
-                <div class="control-row">
-                    <button class="btn" id="startPauseBtn">▶</button>
-                    <button class="btn" id="resetBtn">↺</button>
-                    <button class="btn" id="nextBtn">➔</button>
-                    <button class="btn" id="questionBtn">?</button>
-                    <button class="btn" id="settingsBtn">⚙</button>
+        <!-- Timer Container -->
+        <div class="timer-container flex flex-col items-center w-full gap-4" id="timerContainer">
+            <!-- Topic Display -->
+            <div class="topic-display text-2xl md:text-4xl lg:text-5xl text-center text-primary font-bold max-w-4xl leading-tight cursor-pointer p-2 rounded hover:bg-gray-200 transition-colors duration-200" 
+                 id="topicDisplay">Тема дебатов</div>
+            
+            <!-- Timer Display -->
+            <div class="timer timer-cursor flex items-center justify-center text-6xl md:text-8xl lg:text-9xl font-bold text-black my-4 transition-all duration-300" 
+                 id="timer">00:00</div>
+            
+            <!-- Controls -->
+            <div class="controls flex flex-col gap-6 w-full">
+                <!-- Main Control Buttons -->
+                <div class="control-row w-full flex justify-center gap-6">
+                    <button class="w-12 h-12 md:w-16 md:h-16 border-none rounded-full bg-primary text-white cursor-pointer flex items-center justify-center text-lg md:text-2xl transition-all duration-300 hover:-translate-y-1 hover:bg-secondary active:translate-y-0 shadow-lg" 
+                            id="startPauseBtn">▶</button>
+                    <button class="w-12 h-12 md:w-16 md:h-16 border-none rounded-full bg-primary text-white cursor-pointer flex items-center justify-center text-lg md:text-2xl transition-all duration-300 hover:-translate-y-1 hover:bg-secondary active:translate-y-0 shadow-lg" 
+                            id="resetBtn">↺</button>
+                    <button class="w-12 h-12 md:w-16 md:h-16 border-none rounded-full bg-primary text-white cursor-pointer flex items-center justify-center text-lg md:text-2xl transition-all duration-300 hover:-translate-y-1 hover:bg-secondary active:translate-y-0 shadow-lg" 
+                            id="nextBtn">➔</button>
+                    <button class="w-12 h-12 md:w-16 md:h-16 border-none rounded-full bg-primary text-white cursor-pointer flex items-center justify-center text-lg md:text-2xl transition-all duration-300 hover:-translate-y-1 hover:bg-secondary active:translate-y-0 shadow-lg" 
+                            id="questionBtn">?</button>
+                    <button class="w-12 h-12 md:w-16 md:h-16 border-none rounded-full bg-primary text-white cursor-pointer flex items-center justify-center text-lg md:text-2xl transition-all duration-300 hover:-translate-y-1 hover:bg-secondary active:translate-y-0 shadow-lg" 
+                            id="settingsBtn">⚙</button>
                 </div>
-                <div class="control-row modes">
-                    <button class="btn mode" id="speechBtn">Речь</button>
-                    <button class="btn mode" id="defaultBtn">Установить время</button>
-                    <button class="btn mode" id="prepBtn">Немодерируемые дебаты</button>
-                    <button class="btn mode" id="customBtn">Своё время</button>
+                
+                <!-- Mode Buttons -->
+                <div class="control-row modes w-full flex justify-center flex-wrap gap-4">
+                    <button class="btn-mode min-w-24 md:min-w-32 px-4 md:px-6 h-10 md:h-12 rounded-lg bg-primary text-white border-none cursor-pointer flex items-center justify-center text-sm md:text-base font-semibold tracking-wide transition-all duration-300 hover:-translate-y-1 hover:bg-secondary active:translate-y-0 shadow-lg" 
+                            id="speechBtn">Речь</button>
+                    <button class="btn-mode min-w-24 md:min-w-32 px-4 md:px-6 h-10 md:h-12 rounded-lg bg-primary text-white border-none cursor-pointer flex items-center justify-center text-sm md:text-base font-semibold tracking-wide transition-all duration-300 hover:-translate-y-1 hover:bg-secondary active:translate-y-0 shadow-lg" 
+                            id="defaultBtn">Установить время</button>
+                    <button class="btn-mode min-w-24 md:min-w-32 px-4 md:px-6 h-10 md:h-12 rounded-lg bg-primary text-white border-none cursor-pointer flex items-center justify-center text-sm md:text-base font-semibold tracking-wide transition-all duration-300 hover:-translate-y-1 hover:bg-secondary active:translate-y-0 shadow-lg" 
+                            id="prepBtn">Немодерируемые дебаты</button>
+                    <button class="btn-mode min-w-24 md:min-w-32 px-4 md:px-6 h-10 md:h-12 rounded-lg bg-primary text-white border-none cursor-pointer flex items-center justify-center text-sm md:text-base font-semibold tracking-wide transition-all duration-300 hover:-translate-y-1 hover:bg-secondary active:translate-y-0 shadow-lg" 
+                            id="customBtn">Своё время</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="settings-modal" id="settingsModal">
-        <div class="settings-content">
-            <div class="settings-group">
-                <h3>Тема дебатов</h3>
-                <input type="text" class="settings-input" id="settingsTopicInput">
+    <!-- Settings Modal -->
+    <div class="settings-modal hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 items-center justify-center z-50 backdrop-blur-sm" 
+         id="settingsModal">
+        <div class="settings-content bg-white p-8 rounded-2xl w-11/12 max-w-lg text-primary shadow-2xl border">
+            <div class="settings-group mb-6">
+                <h3 class="mb-3 text-gray-800 text-xl font-semibold">Тема дебатов</h3>
+                <input type="text" class="w-full p-3 mb-3 border border-gray-300 rounded-md bg-white text-gray-800 text-base transition-all duration-300 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary focus:ring-opacity-20" 
+                       id="settingsTopicInput">
             </div>
-            <div class="settings-group">
-                <h3>Свое время (минуты)</h3>
-                <input type="number" class="settings-input" id="customTimeInput" min="1" max="60">
+            <div class="settings-group mb-6">
+                <h3 class="mb-3 text-gray-800 text-xl font-semibold">Свое время (минуты)</h3>
+                <input type="number" class="w-full p-3 mb-3 border border-gray-300 rounded-md bg-white text-gray-800 text-base transition-all duration-300 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary focus:ring-opacity-20" 
+                       id="customTimeInput" min="1" max="60">
             </div>
-            <div class="settings-group">
-                <label style="display: flex; align-items: center; gap: 10px;">
-                    <input type="checkbox" id="soundEnabledCheckbox" checked>
+            <div class="settings-group mb-6">
+                <label class="flex items-center gap-2 text-base text-gray-800 my-2 cursor-pointer">
+                    <input type="checkbox" id="soundEnabledCheckbox" checked 
+                           class="w-5 h-5 cursor-pointer accent-primary">
                     Включить звуки
                 </label>
             </div>
-            <button class="settings-btn" id="advancedSettingsBtn">Расширенные настройки</button>
-            <button class="settings-btn" id="saveSettingsBtn">Сохранить</button>
-            <button class="settings-btn" id="backBtn">Назад</button>
+            <button class="w-full p-3 mt-3 bg-primary text-white border-none rounded-md cursor-pointer text-base font-semibold transition-all duration-300 hover:bg-secondary hover:-translate-y-1" 
+                    id="advancedSettingsBtn">Расширенные настройки</button>
+            <button class="w-full p-3 mt-3 bg-primary text-white border-none rounded-md cursor-pointer text-base font-semibold transition-all duration-300 hover:bg-secondary hover:-translate-y-1" 
+                    id="saveSettingsBtn">Сохранить</button>
+            <button class="w-full p-3 mt-3 bg-primary text-white border-none rounded-md cursor-pointer text-base font-semibold transition-all duration-300 hover:bg-secondary hover:-translate-y-1" 
+                    id="backBtn">Назад</button>
         </div>
     </div>
 
-    <div class="settings-modal" id="advancedSettingsModal">
-        <div class="settings-content">
-            <div class="settings-group">
-                <h3>Время речи (минуты)</h3>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <input type="number" class="settings-input" id="speechTimeInput" min="0" max="60" style="width: 80px;">
-                    <span>мин</span>
-                    <input type="number" class="settings-input" id="speechSecondsInput" min="0" max="59" style="width: 80px;">
-                    <span>сек</span>
+    <!-- Advanced Settings Modal -->
+    <div class="settings-modal hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 items-center justify-center z-50 backdrop-blur-sm" 
+         id="advancedSettingsModal">
+        <div class="settings-content bg-white p-8 rounded-2xl w-11/12 max-w-lg text-primary shadow-2xl border">
+            <div class="settings-group mb-6">
+                <h3 class="mb-3 text-gray-800 text-xl font-semibold">Время речи</h3>
+                <div class="flex items-center gap-2">
+                    <input type="number" class="w-20 p-3 border border-gray-300 rounded-md bg-white text-gray-800 text-base transition-all duration-300 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary focus:ring-opacity-20" 
+                           id="speechTimeInput" min="0" max="60">
+                    <span class="text-gray-800">мин</span>
+                    <input type="number" class="w-20 p-3 border border-gray-300 rounded-md bg-white text-gray-800 text-base transition-all duration-300 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary focus:ring-opacity-20" 
+                           id="speechSecondsInput" min="0" max="59">
+                    <span class="text-gray-800">сек</span>
                 </div>
             </div>
-            <div class="settings-group">
-                <h3>Время заключения (минуты)</h3>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <input type="number" class="settings-input" id="conclusionTimeInput" min="0" max="60" style="width: 80px;">
-                    <span>мин</span>
-                    <input type="number" class="settings-input" id="conclusionSecondsInput" min="0" max="59" style="width: 80px;">
-                    <span>сек</span>
+            <div class="settings-group mb-6">
+                <h3 class="mb-3 text-gray-800 text-xl font-semibold">Время заключения</h3>
+                <div class="flex items-center gap-2">
+                    <input type="number" class="w-20 p-3 border border-gray-300 rounded-md bg-white text-gray-800 text-base transition-all duration-300 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary focus:ring-opacity-20" 
+                           id="conclusionTimeInput" min="0" max="60">
+                    <span class="text-gray-800">мин</span>
+                    <input type="number" class="w-20 p-3 border border-gray-300 rounded-md bg-white text-gray-800 text-base transition-all duration-300 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary focus:ring-opacity-20" 
+                           id="conclusionSecondsInput" min="0" max="59">
+                    <span class="text-gray-800">сек</span>
                 </div>
             </div>
-            <div class="settings-group">
-                <h3>Время немодерируемых дебатов</h3>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <input type="number" class="settings-input" id="prepTimeInput" min="0" max="60" style="width: 80px;">
-                    <span>мин</span>
-                    <input type="number" class="settings-input" id="prepSecondsInput" min="0" max="59" style="width: 80px;">
-                    <span>сек</span>
+            <div class="settings-group mb-6">
+                <h3 class="mb-3 text-gray-800 text-xl font-semibold">Время немодерируемых дебатов</h3>
+                <div class="flex items-center gap-2">
+                    <input type="number" class="w-20 p-3 border border-gray-300 rounded-md bg-white text-gray-800 text-base transition-all duration-300 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary focus:ring-opacity-20" 
+                           id="prepTimeInput" min="0" max="60">
+                    <span class="text-gray-800">мин</span>
+                    <input type="number" class="w-20 p-3 border border-gray-300 rounded-md bg-white text-gray-800 text-base transition-all duration-300 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary focus:ring-opacity-20" 
+                           id="prepSecondsInput" min="0" max="59">
+                    <span class="text-gray-800">сек</span>
                 </div>
             </div>
-            <div class="settings-group">
-                <h3>Время вопроса (секунды)</h3>
-                <input type="number" class="settings-input" id="questionTimeInput" min="1" max="30">
+            <div class="settings-group mb-6">
+                <h3 class="mb-3 text-gray-800 text-xl font-semibold">Время вопроса (секунды)</h3>
+                <input type="number" class="w-full p-3 mb-3 border border-gray-300 rounded-md bg-white text-gray-800 text-base transition-all duration-300 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary focus:ring-opacity-20" 
+                       id="questionTimeInput" min="1" max="30">
             </div>
-            <button class="settings-btn" id="saveAdvancedSettingsBtn">Сохранить</button>
-            <button class="settings-btn" id="backAdvancedBtn">Назад</button>
+            <button class="w-full p-3 mt-3 bg-primary text-white border-none rounded-md cursor-pointer text-base font-semibold transition-all duration-300 hover:bg-secondary hover:-translate-y-1" 
+                    id="saveAdvancedSettingsBtn">Сохранить</button>
+            <button class="w-full p-3 mt-3 bg-primary text-white border-none rounded-md cursor-pointer text-base font-semibold transition-all duration-300 hover:bg-secondary hover:-translate-y-1" 
+                    id="backAdvancedBtn">Назад</button>
         </div>
     </div>
 
-    <script src="./main.js"></script>
+    <script src="./public/assets/scripts/main.js"></script>
 </body>
 
 </html>
