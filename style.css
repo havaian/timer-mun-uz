@@ -53,7 +53,17 @@ body {
     width: 324px;
 }
 
-.logo.mgimo img {
+.logo.scolar img {
+    height: 230px;
+    width: 149x;
+}
+
+.logo.uvalogo img {
+    height: 120px;
+    width: 324px;
+}
+
+.logo.scocenter img {
     height: 230px;
     width: 230px;
 }
@@ -405,7 +415,7 @@ input[type="checkbox"] {
 /* For larger screens, make timer bigger */
 @media (min-width: 1200px) {
     .topic-display {
-        font-size: 3rem;
+        font-size: 3.5rem;
     }
 }
 

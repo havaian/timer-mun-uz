@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timer for MUN</title>
     <link rel="icon" href="./assets/timer-favicon.png" type="image/png">
-    <link rel="stylesheet" href="./style.css"></link>
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
@@ -15,12 +15,16 @@
             <div class="logo timer">
                 <img src='./assets/timer.webp'></img>
             </div>
-            <div class="logo mgimo">
-                <img src='./assets/mgimo.webp'></img>
+             <div class="logo scocenter">
+                <img src='./assets/scocenter.webp'></img>
+            </div>
+            <div class="logo scolar">
+                <img src='./assets/scolar.webp'></img>
+            </div>
+             <div class="logo uvalogo">
+                <img src='./assets/uvalogo.webp'></img>
             </div>
         </div>
-
-        <input type="text" class="topic-input" placeholder="Введите тему дебатов" id="topicInput">
 
         <div class="timer-container" id="timerContainer">
             <div class="topic-display" id="topicDisplay"></div>
@@ -29,13 +33,14 @@
                 <div class="control-row">
                     <button class="btn" id="startPauseBtn">▶</button>
                     <button class="btn" id="resetBtn">↺</button>
+                    <button class="btn" id="nextBtn">➔</button>
                     <button class="btn" id="questionBtn">?</button>
                     <button class="btn" id="settingsBtn">⚙</button>
                 </div>
                 <div class="control-row modes">
                     <button class="btn mode" id="speechBtn">Речь</button>
-                    <button class="btn mode" id="conclusionBtn">Заключение</button>
-                    <button class="btn mode" id="prepBtn">Подготовка</button>
+                    <button class="btn mode" id="defaultBtn">Установить время</button>
+                    <button class="btn mode" id="prepBtn">Немодерируемые дебаты</button>
                     <button class="btn mode" id="customBtn">Своё время</button>
                 </div>
             </div>
@@ -49,7 +54,7 @@
                 <input type="text" class="settings-input" id="settingsTopicInput">
             </div>
             <div class="settings-group">
-                <h3>Кастомное время (минуты)</h3>
+                <h3>Свое время (минуты)</h3>
                 <input type="number" class="settings-input" id="customTimeInput" min="1" max="60">
             </div>
             <div class="settings-group">
@@ -68,27 +73,30 @@
         <div class="settings-content">
             <div class="settings-group">
                 <h3>Время речи (минуты)</h3>
-                <input type="number" class="settings-input" id="speechTimeInput" min="1" max="60">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="number" class="settings-input" id="speechTimeInput" min="0" max="60" style="width: 80px;">
+                    <span>мин</span>
+                    <input type="number" class="settings-input" id="speechSecondsInput" min="0" max="59" style="width: 80px;">
+                    <span>сек</span>
+                </div>
             </div>
             <div class="settings-group">
                 <h3>Время заключения (минуты)</h3>
-                <input type="number" class="settings-input" id="conclusionTimeInput" min="1" max="60">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="number" class="settings-input" id="conclusionTimeInput" min="0" max="60" style="width: 80px;">
+                    <span>мин</span>
+                    <input type="number" class="settings-input" id="conclusionSecondsInput" min="0" max="59" style="width: 80px;">
+                    <span>сек</span>
+                </div>
             </div>
             <div class="settings-group">
-                <h3>Время подготовки (минуты)</h3>
-                <input type="number" class="settings-input" id="prepTimeInput" min="1" max="60">
-            </div>
-            <div class="settings-group">
-                <h3>Время без гаджетов в подготовке (минуты)</h3>
-                <input type="number" class="settings-input" id="noGadgetTimeInput" min="1" max="60">
-            </div>
-            <div class="settings-group">
-                <h3>Защитное время (секунды)</h3>
-                <input type="number" class="settings-input" id="protectedTimeInput" min="0" max="60">
-                <label>
-                    <input type="checkbox" id="protectedTimeCheckbox" checked>
-                    Использовать защитное время
-                </label>
+                <h3>Время немодерируемых дебатов</h3>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="number" class="settings-input" id="prepTimeInput" min="0" max="60" style="width: 80px;">
+                    <span>мин</span>
+                    <input type="number" class="settings-input" id="prepSecondsInput" min="0" max="59" style="width: 80px;">
+                    <span>сек</span>
+                </div>
             </div>
             <div class="settings-group">
                 <h3>Время вопроса (секунды)</h3>
